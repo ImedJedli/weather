@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/static/css/main.0fb3ca00.css",
+    "main.js": "/static/js/main.cadd0f41.js",
+    "static/media/sky-cold.jpg": "/static/media/sky-cold.d29e01719054975bbc3d.jpg",
+    "static/media/sky-warm.jpg": "/static/media/sky-warm.2c07106e9ff8f34ef3e4.jpg",
+    "index.html": "/index.html",
+    "main.0fb3ca00.css.map": "/static/css/main.0fb3ca00.css.map",
+    "main.cadd0f41.js.map": "/static/js/main.cadd0f41.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.0fb3ca00.css",
+    "static/js/main.cadd0f41.js"
+  ]
+}
