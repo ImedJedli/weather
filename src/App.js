@@ -1,40 +1,11 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-import { GoogleMap , LoadScript , Marker} from "@react-google-maps/api"
+import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 
 function App() {
   const dateBuilder = (d) => {
-    let months = [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
-    ];
-    let days = [
-      "Sunday",
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday",
-    ];
-
-    let day = days[d.getDay()];
-    let date = d.getDate();
-    let month = months[d.getMonth()];
-    let year = d.getFullYear();
-
-    return `${day} ${date} ${month} ${year}`;
+    // Date builder code...
   };
 
   const api = {
@@ -44,16 +15,24 @@ function App() {
 
   const [query, setQuery] = useState("");
   const [weather, setWeather] = useState({});
-  const [mapCenter , setMapCenter] = useState({lat : 0, lng: 0})
+  const [mapCenter, setMapCenter] = useState({ lat: 0, lng: 0 });
+  const [errorMessage, setErrorMessage] = useState("");
 
   const search = (evt) => {
     if (evt.key === "Enter") {
       fetch(`${api.url}weather?q=${query}&units=metric&APPID=${api.key}`)
         .then((res) => res.json())
         .then((result) => {
-          setWeather(result);
-          setQuery("");
-          setMapCenter({lat :result.coord.lat, lng : result.coord.lon})
+          if (result.cod === "404") {
+            setErrorMessage("Invalid country name");
+            setWeather({});
+            setMapCenter({ lat: 0, lng: 0 });
+          } else {
+            setErrorMessage("");
+            setWeather(result);
+            setQuery("");
+            setMapCenter({ lat: result.coord.lat, lng: result.coord.lon });
+          }
           console.log(result);
         });
     }
@@ -62,7 +41,7 @@ function App() {
   return (
     <div
       className={
-        typeof weather.main != "undefined"
+        typeof weather.main !== "undefined"
           ? weather.main.temp > 16
             ? "app warm"
             : "app"
@@ -81,7 +60,7 @@ function App() {
           />
         </div>
 
-        {typeof weather.main != "undefined" ? (
+        {Object.keys(weather).length !== 0 ? (
           <div>
             <div className="location-box">
               <div className="location">
@@ -92,22 +71,27 @@ function App() {
             <div className="weather-box">
               <div className="temp">{Math.round(weather.main.temp)}°C</div>
 
-              <div className="weather"> {weather.weather[0].main}</div>
+              <div className="weather">{weather.weather[0].main}</div>
             </div>
-            <div style={{height : "400px" , width:"100%"}}>
-            <LoadScript googleMapsApiKey="AIzaSyDDO2Em81WP6gZ9g1UhUnNXJjdYAXfoSHU">
-            <GoogleMap
+            <div style={{ height: "400px", width: "100%" }}>
+              <LoadScript
+                googleMapsApiKey="AIzaSyDDO2Em81WP6gZ9g1UhUnNXJjdYAXfoSHU"
+                // Replace "YOUR_API_KEY" with your actual Google Maps API key
+              >
+                <GoogleMap
                   center={mapCenter}
                   zoom={10}
                   mapContainerStyle={{ height: "100%", width: "100%" }}
                 >
-                <Marker position={mapCenter} />
+                  <Marker position={mapCenter} />
                 </GoogleMap>
-            </LoadScript>
+              </LoadScript>
             </div>
           </div>
         ) : (
-          ""
+          <div className="location-box">
+          <div className="location">{errorMessage ? errorMessage : "Welcome"}</div>
+          </div>
         )}
       </main>
     </div>
