@@ -1,4 +1,4 @@
-# live demo
+# Live demo
 you can try this application using this link 
 
 https://master--dashing-marigold-190b91.netlify.app
